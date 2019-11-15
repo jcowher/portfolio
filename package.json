@@ -1,0 +1,42 @@
+{
+  "name": "portfolio",
+  "description": "Portfolio site of Jonathan Cowher",
+  "version": "1.0.0",
+  "main": "index.html",
+  "author": "Jonathan Cowher <jrcowher@gmail.com>",
+  "scripts": {
+    "test": "echo 'Error: no test specified' && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jcowher/portfolio.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jcowher/portfolio/issues"
+  },
+  "homepage": "https://github.com/jcowher/portfolio",
+  "dependencies": {
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "@babel/register": "^7.7.0",
+    "autoprefixer": "^9.7.1",
+    "babelify": "^10.0.0",
+    "browserify": "^16.5.0",
+    "cssnano": "^4.1.10",
+    "del": "^5.1.0",
+    "fancy-log": "^1.3.3",
+    "foundation-sites": "^6.5.3",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-postcss": "^8.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "jquery": "^3.4.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1",
+    "what-input": "^5.2.6"
+  }
+}
