@@ -52,6 +52,137 @@
 
 // Helpers
 @include foundation-float-classes;
-// @include foundation-flex-classes;
+@include foundation-flex-classes;
 @include foundation-visibility-classes;
 // @include foundation-prototype-classes;
+
+.section--top-level {
+  height: 100vh;
+}
+
+.section--home {
+  position: relative;
+  background: #111;
+
+  &__speech-bubble {
+    animation: blink-svg 3s linear 1s 1 forwards;
+    filter: drop-shadow(0 -1px 1px #222);
+
+    path {
+      animation: blink-svg 3s linear 1s 1 forwards;
+      fill: transparent;
+      stroke: #000;
+      stroke-width: 4px;
+    }
+  }
+
+  h2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-family: 'Alegreya Sans', sans-serif;
+    font-size: 200px;
+    line-height: 1;
+    margin: -45px 0 0;
+    transform: translate3d(-50%, -50%, 0);
+
+    span {
+      display: block;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    b {
+      position: relative;
+      left: -9999px;
+      animation: show-letter 0s linear 0s 1 forwards;
+      color: #fff;
+      font-weight: 100;
+      opacity: 0;
+      text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #0078fc, 0 0 .5em #0078fc, 0 0 .1em #0078fc, 0 10px 3px #000;
+
+      $animation-delay: 5.0;
+
+      &:nth-child(1) {
+        animation-delay: #{$animation-delay}s;
+      }
+
+      &:nth-child(2) {
+        $animation-delay: $animation-delay + .5;
+        animation-delay: #{$animation-delay}s;
+      }
+
+      &:nth-child(3) {
+        $animation-delay: $animation-delay + 1;
+        animation-delay: #{$animation-delay}s;
+      }
+
+      &:nth-child(4) {
+        $animation-delay: $animation-delay + .25;
+        animation-delay: #{$animation-delay}s;
+      }
+
+      &:nth-child(5) {
+        $animation-delay: $animation-delay + .5;
+        animation-delay: #{$animation-delay}s;
+      }
+
+      &:nth-child(6) {
+        $animation-delay: $animation-delay + 1.25;
+        animation-delay: #{$animation-delay}s;
+      }
+    }
+  }
+}
+
+@keyframes show-letter {
+  to {
+    left: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes blink-svg {
+  0% {
+    filter: drop-shadow(0 -1px 1px #222);
+    stroke: #000;
+  }
+  77% {
+    filter: drop-shadow(0 -1px 1px #222);
+    stroke: #000;
+  }
+  78% {
+    filter: drop-shadow(0 -40px 100px #dbeafb) drop-shadow(0 0 2px #dbeafb) drop-shadow(0 0 1em #0078fc) drop-shadow(0 0 .5em #0078fc) drop-shadow(0 0 .1em #0078fc) drop-shadow(0 10px 3px #000);
+    stroke: #a7cef9;
+  }
+  79% {
+    stroke: #333;
+  }
+  80% {
+    filter: none;
+  }
+  81% {
+    filter: drop-shadow(0 -40px 100px #dbeafb) drop-shadow(0 0 2px #dbeafb) drop-shadow(0 0 1em #0078fc) drop-shadow(0 0 .5em #0078fc) drop-shadow(0 0 .1em #0078fc) drop-shadow(0 10px 3px #000);
+    stroke: #a7cef9;
+  }
+  82% {
+    stroke: #333;
+    filter: none;
+  }
+  83% {
+    filter: drop-shadow(0 -40px 100px #dbeafb) drop-shadow(0 0 2px #dbeafb) drop-shadow(0 0 1em #0078fc) drop-shadow(0 0 .5em #0078fc) drop-shadow(0 0 .1em #0078fc) drop-shadow(0 10px 3px #000);
+    stroke: #a7cef9;
+  }
+  92% {
+    stroke: #333;
+    filter: none;
+  }
+  92.5% {
+    filter: drop-shadow(0 -40px 100px #dbeafb) drop-shadow(0 0 2px #dbeafb) drop-shadow(0 0 1em #0078fc) drop-shadow(0 0 .5em #0078fc) drop-shadow(0 0 .1em #0078fc) drop-shadow(0 10px 3px #000);
+    stroke: #a7cef9;
+  }
+  100% {
+    filter: drop-shadow(0 -40px 100px #dbeafb) drop-shadow(0 0 2px #dbeafb) drop-shadow(0 0 1em #0078fc) drop-shadow(0 0 .5em #0078fc) drop-shadow(0 0 .1em #0078fc) drop-shadow(0 10px 3px #000);
+    stroke: #a7cef9;
+  }
+}
