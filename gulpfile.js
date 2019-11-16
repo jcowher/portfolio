@@ -16,6 +16,7 @@ const watchify = require('watchify');
 
 const paths = {
   "build": process.env.BUILD_DIR || "dist",
+  "html": "*.html",
   "scripts": "js/**/*.js",
   "styles": "scss/**/*.scss",
   "foundation": {
@@ -69,7 +70,7 @@ function clean() {
 }
 
 function copyHtml() {
-  return gulp.src("*.html")
+  return gulp.src(paths.html)
       .pipe(gulp.dest(paths.build))
 }
 
@@ -117,6 +118,11 @@ function watchScripts(cb) {
   return rebundle();
 }
 
+function watchHtml(cb) {
+  gulp.watch(paths.html, copyHtml);
+  cb();
+}
+
 gulp.task('build', gulp.series(clean, gulp.parallel(copyHtml, compileScripts, compileStyles)));
 gulp.task('init', copyFoundationSettings);
-gulp.task('watch', gulp.series('build', gulp.parallel(watchStyles, watchScripts)));
+gulp.task('watch', gulp.series('build', gulp.parallel(watchStyles, watchScripts, watchHtml)));
