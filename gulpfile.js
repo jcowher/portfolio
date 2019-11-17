@@ -1,23 +1,32 @@
 'use strict';
 
 const autoprefixer = require('autoprefixer');
-const browserify = require('browserify');
+const babel = require('gulp-babel');
+const concat = require('gulp-concat');
 const cssnano = require('cssnano');
 const gulp = require('gulp');
 const del = require('del');
 const fs = require('fs');
-const log = require('fancy-log');
+const notify = require('gulp-notify');
+const plumber = require('gulp-plumber');
 const postcss = require('gulp-postcss');
 const sass = require('gulp-sass');
-const source = require('vinyl-source-stream');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
-const watchify = require('watchify');
 
 const paths = {
   "build": process.env.BUILD_DIR || "dist",
   "html": "*.html",
-  "scripts": "js/**/*.js",
+  "scripts": {
+    "vendor": [
+      "node_modules/jquery/dist/jquery.min.js",
+      "node_modules/what-input/dist/what-input.min.js",
+      "node_modules/foundation-sites/dist/js/foundation.min.js"
+    ],
+    "site": [
+      "js/**/*.js"
+    ]
+  },
   "styles": "scss/**/*.scss",
   "foundation": {
     "settings": {
@@ -31,39 +40,29 @@ const config = {
   "clean": {
     "force": true
   },
+  "plumber": {
+    "errorHandler": function (err) {
+      notify.onError({
+        "title": "Gulp error in " + err.plugin,
+        "message": err.toString()
+      })(err);
+    }
+  },
   "scripts": {
-    "filename": "main.js",
-    "babelify": {
-      "presets": ["@babel/preset-env"],
-      "ignore": ["node_modules"]
+    "babel": {
+      "presets": ["@babel/preset-env"]
     },
     "settings": {
       "sourcemaps": true
     }
   },
   "styles": {
-    "filename": "main.css",
     "autoprefixer": ["last 2 versions"],
     "sass": {
       "includePaths": ["node_modules/foundation-sites/scss"]
     }
   }
 };
-
-function bundler() {
-  let b = browserify({
-    "entries": `js/${config.scripts.filename}`,
-    "extensions": [".js"],
-    "cache": {},
-    "packageCache": {},
-    "fullPaths": true,
-    "debug": true
-  });
-
-  b.transform('babelify', config.scripts.babelify);
-
-  return b;
-}
 
 function clean() {
   return del(paths.build, config.clean);
@@ -74,55 +73,57 @@ function copyHtml() {
       .pipe(gulp.dest(paths.build))
 }
 
-function copyFoundationSettings(cb) {
+function copyFoundationSettings(done) {
   if (!fs.existsSync(paths.foundation.settings.dest)) {
     return gulp.src(paths.foundation.settings.src)
         .pipe(gulp.dest(paths.foundation.settings.dest));
   }
 
-  cb();
+  done();
 }
 
-function compileScripts() {
-  return bundler().bundle()
-      .pipe(source(`${config.scripts.filename}`))
-      .on('error', log.error)
+function compileSiteScripts() {
+  return gulp.src(paths.scripts.site)
+      .pipe(plumber(config.plumber))
+      .pipe(concat('main.js'))
+      .pipe(babel(config.scripts.babel))
+      .pipe(uglify())
+      .pipe(gulp.dest(`${paths.build}/js`));
+}
+
+function compileThirdPartyScripts() {
+  return gulp.src(paths.scripts.vendor)
+      .pipe(plumber(config.plumber))
+      .pipe(concat('thirdparty.js'))
       .pipe(gulp.dest(`${paths.build}/js`));
 }
 
 function compileStyles() {
   return gulp.src(paths.styles)
+      .pipe(plumber(config.plumber))
       .pipe(sourcemaps.init())
-      .pipe(sass(config.styles.sass)).on('error', sass.logError)
+      .pipe(sass(config.styles.sass))
       .pipe(postcss([autoprefixer(), cssnano()]))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(`${paths.build}/css`));
 }
 
-function watchStyles(cb) {
-  gulp.watch(paths.styles, gulp.series(compileStyles));
-  cb();
+function watchStyles(done) {
+  gulp.watch(paths.styles, compileStyles);
+  done();
 }
 
-function watchScripts(cb) {
-  let b = bundler().plugin(watchify);
-  let rebundle = function () {
-    return b.bundle()
-        .pipe(source(`${config.scripts.filename}`))
-        .on('error', log.error)
-        .pipe(gulp.dest(`${paths.build}/js`));
-  };
-
-  b.on('update', rebundle);
-
-  return rebundle();
+function watchScripts(done) {
+  gulp.watch(paths.scripts.site, compileSiteScripts);
+  gulp.watch(paths.scripts.vendor, compileThirdPartyScripts);
+  done();
 }
 
-function watchHtml(cb) {
+function watchHtml(done) {
   gulp.watch(paths.html, copyHtml);
-  cb();
+  done();
 }
 
-gulp.task('build', gulp.series(clean, gulp.parallel(copyHtml, compileScripts, compileStyles)));
+gulp.task('build', gulp.series(clean, gulp.parallel(copyHtml, compileThirdPartyScripts, compileSiteScripts, compileStyles)));
 gulp.task('init', copyFoundationSettings);
 gulp.task('watch', gulp.series('build', gulp.parallel(watchStyles, watchScripts, watchHtml)));
