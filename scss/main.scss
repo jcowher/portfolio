@@ -76,6 +76,26 @@
     }
   }
 
+  &__line {
+    position: absolute;
+    left: 50%;
+    bottom: 100px;
+    height: 100px;
+    width: 30%;
+
+    svg {
+      width: 100%;
+    }
+
+    path {
+      fill: transparent;
+      stroke: #fff;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 4px;
+    }
+  }
+
   h2 {
     position: absolute;
     top: 50%;
@@ -83,11 +103,10 @@
     font-family: 'Alegreya Sans', sans-serif;
     font-size: 200px;
     line-height: 1;
-    margin: -45px 0 0;
+    margin: -35px 0 0;
     transform: translate3d(-50%, -50%, 0);
 
     span {
-      display: block;
       height: 100%;
       overflow: hidden;
     }
@@ -95,49 +114,39 @@
     b {
       position: relative;
       left: -9999px;
-      animation: show-letter 0s linear 0s 1 forwards;
       color: #fff;
+      display: block;
       font-weight: 100;
       opacity: 0;
       text-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #0078fc, 0 0 .5em #0078fc, 0 0 .1em #0078fc, 0 10px 3px #000;
 
-      $animation-delay: 5.0;
-
-      &:nth-child(1) {
-        animation-delay: #{$animation-delay}s;
+      &.visible {
+        left: 0;
+        opacity: 1;
       }
 
-      &:nth-child(2) {
-        $animation-delay: $animation-delay + .5;
-        animation-delay: #{$animation-delay}s;
-      }
-
-      &:nth-child(3) {
-        $animation-delay: $animation-delay + 1;
-        animation-delay: #{$animation-delay}s;
-      }
-
-      &:nth-child(4) {
-        $animation-delay: $animation-delay + .25;
-        animation-delay: #{$animation-delay}s;
-      }
-
-      &:nth-child(5) {
-        $animation-delay: $animation-delay + .5;
-        animation-delay: #{$animation-delay}s;
-      }
-
-      &:nth-child(6) {
-        $animation-delay: $animation-delay + 1.25;
-        animation-delay: #{$animation-delay}s;
+      &.current {
+        &::after {
+          position: absolute;
+          bottom: 20px;
+          left: 0;
+          animation: blink 1s linear 0s infinite alternate;
+          background: #fff;
+          box-shadow: 0 -40px 100px, 0 0 2px, 0 0 1em #0078fc, 0 0 .5em #0078fc, 0 0 .1em #0078fc, 0 10px 3px #000;
+          content: "";
+          height: 2px;
+          width: 100%;
+        }
       }
     }
   }
 }
 
-@keyframes show-letter {
-  to {
-    left: 0;
+@keyframes blink {
+  0% {
+    opacity: 0;
+  }
+  100% {
     opacity: 1;
   }
 }
