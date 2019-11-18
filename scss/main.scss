@@ -56,13 +56,30 @@
 @include foundation-visibility-classes;
 // @include foundation-prototype-classes;
 
+body {
+  overflow-x: hidden;
+}
+
+.section-wrapper {
+  background: #111;
+  flex-flow: row nowrap;
+  height: 100vh;
+  width: 200vw;
+}
+
 .section--top-level {
+  flex: 0 0 100vw;
   height: 100vh;
 }
 
-.section--home {
+.section--welcome {
   position: relative;
-  background: #111;
+  transform: translateX(0);
+  transition: transform 1s;
+
+  &.did-welcome {
+    transform: translateX(-100vw);
+  }
 
   &__speech-bubble {
     animation: blink-svg 3s linear 1s 1 forwards;
@@ -72,26 +89,6 @@
       animation: blink-svg 3s linear 1s 1 forwards;
       fill: transparent;
       stroke: #000;
-      stroke-width: 4px;
-    }
-  }
-
-  &__line {
-    position: absolute;
-    left: 50%;
-    bottom: 100px;
-    height: 100px;
-    width: 30%;
-
-    svg {
-      width: 100%;
-    }
-
-    path {
-      fill: transparent;
-      stroke: #fff;
-      stroke-linecap: round;
-      stroke-linejoin: round;
       stroke-width: 4px;
     }
   }
@@ -139,6 +136,15 @@
         }
       }
     }
+  }
+}
+
+.section--home {
+  transform: translateX(0);
+  transition: transform 1s;
+
+  &.did-welcome {
+    transform: translateX(-100vw);
   }
 }
 
