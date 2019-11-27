@@ -70,16 +70,16 @@ body {
 .section--top-level {
   flex: 0 0 100vw;
   height: 100vh;
+  transform: translateY(0);
+  transition: transform 2s;
+
+  &.did-welcome {
+    transform: translateY(-100vh);
+  }
 }
 
 .section--welcome {
   position: relative;
-  transform: translateX(0);
-  transition: transform 1s;
-
-  &.did-welcome {
-    transform: translateX(-100vw);
-  }
 
   &__speech-bubble {
     animation: blink-svg 3s linear 1s 1 forwards;
@@ -140,12 +140,6 @@ body {
 }
 
 .section--home {
-  transform: translateX(0);
-  transition: transform 1s;
-
-  &.did-welcome {
-    transform: translateX(-100vw);
-  }
 }
 
 @keyframes blink {
